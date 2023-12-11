@@ -3,51 +3,45 @@ const { EmployeeModel, AddressModel } = require('../database/models/Employee');
 
 exports.createEmployee = async (req, res) => {
 
+    const { employeeId, firstName, lastName, email, age, gender, contact, address } = req.body
+
     const employee = await EmployeeModel.create({
-        employeeId: req.body.employeeId,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        age: req.body.age,
-        gender: req.body.gender,
-        contact: req.body.contact,
-        address: req.body.address
+        employeeId: employeeId,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        age: age,
+        gender: gender,
+        contact: contact,
+        address: address
     })
     res.json(employee)
 }
 
 exports.updateEmployee = async (req, res) => {
-    const employeeId = req.params.employeeId
+    const id = req.params.id
+
+    const { employeeId, firstName, lastName, email, age, gender, contact, address } = req.body
 
     const updatedEmployee = {
-        employeeId: req.body.employeeId,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        age: req.body.age,
-        gender: req.body.gender,
-        contact: req.body.contact,
-        address: req.body.address
+        employeeId: employeeId,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        age: age,
+        gender: gender,
+        contact: contact,
+        address: address
     }
 
-    const employee = await EmployeeModel.findByIdAndUpdate(employeeId, updatedEmployee, { new: true })
+    const employee = await EmployeeModel.findByIdAndUpdate(id, updatedEmployee, { new: true })
     res.json(employee)
 }
 
 exports.deleteEmployee = async (req, res) => {
     const employeeId = req.params.employeeId
 
-    const deleteEmployee = {
-        employeeId: req.body.employeeId,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        age: req.body.age,
-        gender: req.body.gender,
-        contact: req.body.contact,
-        address: req.body.address
-    }
-    const employee = await EmployeeModel.findByIdAndDelete(employeeId, deleteEmployee, { new: true })
+    const employee = await EmployeeModel.findByIdAndDelete(employeeId, { new: true })
     res.json(employee)
 }
 

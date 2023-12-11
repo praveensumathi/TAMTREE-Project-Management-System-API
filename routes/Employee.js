@@ -8,7 +8,7 @@ const use = (fn) => (req, res, next) =>
 
 router.post("/createEmployee",
     use(EmployeeController.createEmployee))
-router.put("/updateEmployee/:employeeId",
+router.put("/updateEmployee/:id",
     use(EmployeeController.updateEmployee))
 router.delete("/deleteEmployee/:employeeId",
     use(EmployeeController.deleteEmployee))
