@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const { EmployeeModel, AddressModel } = require('../database/models/Employee');
 
 exports.CreateEmployee = async (req, res) => {
+
     const employee = await EmployeeModel.create({
         employeeId: req.body.employeeId,
         first_Name: req.body.first_Name,
@@ -49,7 +49,11 @@ exports.DeleteEmployee = async (req, res) => {
         address: req.body.address
     }
 
-    const employee = await EmployeeModel.findByIdAndUpdate(employeeId, deleteEmployee, { new: true })
+    const employee = await EmployeeModel.findByIdAndDelete(employeeId, deleteEmployee, { new: true })
     res.json(employee)
 }
 
+exports.GetEmployee = async (req, res) => {
+    const employee = await EmployeeModel.find()
+    res.json(employee)
+}
