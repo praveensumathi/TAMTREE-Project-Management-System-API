@@ -1,16 +1,14 @@
 const ProjectModel = require("../database/models/project");
 const mongoose = require("mongoose");
 
-// POST create a new project
 exports.createProject = async (req, res, next) => {
   try {
     const project = await ProjectModel.create({
-      ProjectName: req.body.ProjectName,
-      description: req.body.description,
+      ProjectName:req.body.ProjectName,
+      description:req.body.description,
       startDate:req.body.startDate,
       endDate:req.body.endDate,
       Duration: req.body.Duration,
-      
     });
     res.json(project);
   } catch (error) {
@@ -18,7 +16,7 @@ exports.createProject = async (req, res, next) => {
   }
 };
 
-// GET all projects find 
+
 exports.getAllProjects = async (req, res, next) => {
   try {
     const projects = await ProjectModel.find();
@@ -37,7 +35,7 @@ exports.getProjectById = async (req, res) => {
       },
       {
         $lookup: {
-          from: "storymodels",
+          from: "stories",
           localField: "_id",
           foreignField: "project",
           as: "stories",
@@ -48,7 +46,7 @@ exports.getProjectById = async (req, res) => {
       },
       {
         $lookup: {
-          from: "taskmodels",
+          from: "tasks",
           localField: "stories._id",
           foreignField: "story",
           as: "stories.tasks",

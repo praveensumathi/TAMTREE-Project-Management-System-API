@@ -9,6 +9,6 @@ const StorySchema = new mongoose.Schema({
   project:{ type: mongoose.Schema.Types.ObjectId, ref: ProjectModel}  
 });
 
-const StoryModel = mongoose.model('StoryModel', StorySchema);
+const StoryModel = mongoose.model('Story', StorySchema);
 
 module.exports = StoryModel;

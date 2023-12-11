@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const port = 3000;
+const app = express();
 
 const projectRoutes = require("./routes/project");
 const storyRoutes = require("./routes/story");
@@ -18,11 +19,12 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-const app = express();
+app.use(express.json());
+app.use(cors())
 
-app.use('/projects', projectRoutes);
-app.use('/stories', storyRoutes);
-app.use('/tasks', taskRoutes);
+app.use('/projects',projectRoutes);
+app.use('/stories',storyRoutes);
+app.use('/tasks',taskRoutes);
 
 app.use((err, req, res, next) => {
   console.log("global error handling running");

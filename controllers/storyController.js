@@ -35,7 +35,7 @@ exports.getAllStories = async (req, res) => {
       [
         {
           $lookup:{
-            from:"projectmodels",
+            from:"projects",
             localField:"project",
             foreignField:"_id",
             as:"project"
