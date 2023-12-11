@@ -1,30 +1,37 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose')
-const port = 3000
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const port = 3000;
 const app = express();
-app.use(express.json())
 
-mongoose.connect('mongodb+srv://pmboobesh:a5pIqiYiNwRwnGUB@cluster0.hbtw8lt.mongodb.net/ProjectManagement')
+const employeeRoutes = require("./routes/Employee");
+const projectRoutes = require("./routes/Project");
+const storyRoutes = require("./routes/story");
+
+mongoose
+    .connect(
+        "mongodb+srv://pmboobesh:a5pIqiYiNwRwnGUB@cluster0.hbtw8lt.mongodb.net/ProjectManagement"
+    )
     .then(() => {
-        console.log('Mongoose Connected successfully');
+        console.log("Mongoose Connected successfully");
     })
     .catch((error) => {
-        console.error('Error connecting to MongoDB:', error);
+        console.error("Error connecting to MongoDB:", error);
     });
 
-app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
-}))
+app.use(express.json());
+app.use(cors())
 
-const employeeRoutes = require("./routes/Employee")
+app.use('/projects', projectRoutes);
+app.use('/stories', storyRoutes);
+app.use('/employee', employeeRoutes);
+
 
 app.use((err, req, res, next) => {
     console.log("global error handling running");
-    res.json(err)
-    next()
-})
+    res.json(err);
+    next();
+});
 
 app.use("/employee", employeeRoutes)
 
