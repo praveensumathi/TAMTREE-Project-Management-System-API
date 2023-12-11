@@ -10,7 +10,7 @@ router.post("/createEmployee",
     use(EmployeeController.createEmployee))
 router.put("/updateEmployee/:id",
     use(EmployeeController.updateEmployee))
-router.delete("/deleteEmployee/:employeeId",
+router.delete("/deleteEmployee/:id",
     use(EmployeeController.deleteEmployee))
 router.get("/getEmployee",
     use(EmployeeController.getEmployee))
