@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const port = 3000
 
 
-mongoose.connect('mongodb://localhost:27017/local')
+mongoose.connect('mongodb+srv://pmboobesh:a5pIqiYiNwRwnGUB@cluster0.hbtw8lt.mongodb.net/ProjectManagement')
     .then(() => {
         console.log('Mongoose Connected successfully');
     })
