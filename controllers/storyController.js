@@ -1,7 +1,7 @@
 const StoryModel = require("../database/models/story")
 
 
-// POST create a new story
+
 exports.createStory = async (req, res,next) => {
     try {
         const story = await StoryModel.create({
@@ -17,7 +17,7 @@ exports.createStory = async (req, res,next) => {
     ;
 
 
-  //get stories find
+
  exports.getStories = async (req, res,next) => { 
   try {
     const stories = await StoryModel.find()
@@ -28,7 +28,7 @@ exports.createStory = async (req, res,next) => {
  } 
 
 
-// GET all stories
+
 exports.getAllStories = async (req, res) => {
   try {
     const stories = await StoryModel.aggregate(
@@ -54,7 +54,6 @@ exports.getAllStories = async (req, res) => {
     Duration:1,
     startDate:1,
     endDate:1,
-    Budget:1 
   }
           }
         }
@@ -66,7 +65,7 @@ exports.getAllStories = async (req, res) => {
   }
 };
 
-// GET a specific story by ID
+
 exports.getStoryById = async (req, res) => {
   try {
     const story = await StoryModel.findById(req.params.storyId);
@@ -82,7 +81,7 @@ exports.getStoryById = async (req, res) => {
 
 
 
-// PUT update a story by ID
+
 exports.updateStory = async (req, res) => {
   try {
     const story = await StoryModel.findByIdAndUpdate(
@@ -99,7 +98,7 @@ exports.updateStory = async (req, res) => {
   }
 };
 
-// DELETE a story by ID
+
 exports.deleteStory = async (req, res) => {
   try {
     const story = await StoryModel.findByIdAndDelete(req.params.storyId);

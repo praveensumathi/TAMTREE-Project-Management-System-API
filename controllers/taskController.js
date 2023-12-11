@@ -29,15 +29,6 @@ exports.getTasks = async (req, res, next) => {
 exports.getAllTasks = async (req, res) => {
   try {
     const tasks = await TaskModel.aggregate([
-      // {
-      //   $lookup: {
-      //     from: "usermodels",
-      //     localField: "user",
-      //     foreignField: "_id",
-      //     as: "user",
-      //   },
-      // },
-      // { $unwind: "$user" },
       {
         $lookup: {
           from: "storymodels",

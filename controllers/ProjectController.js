@@ -10,7 +10,7 @@ exports.createProject = async (req, res, next) => {
       startDate:req.body.startDate,
       endDate:req.body.endDate,
       Duration: req.body.Duration,
-      Budget:req.body.Budget
+      
     });
     res.json(project);
   } catch (error) {
@@ -65,7 +65,6 @@ exports.getProjectById = async (req, res) => {
           Duration: { $first: "$Duration" },
           startDate:{ $first: "$startDate" },
           endDate:{ $first: "$endDate" },
-          Budget:{$first: "$Budget"},
           stories: { $push: {
             title:"$stories.title",
             description:"$stories.description",
@@ -85,7 +84,6 @@ exports.getProjectById = async (req, res) => {
           startDate:1,
           endDate:1,
           Duration: 1,
-          Budget: 1,
           stories: 1
         },
       },
