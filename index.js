@@ -6,7 +6,6 @@ const app = express();
 
 const projectRoutes = require("./routes/project");
 const storyRoutes = require("./routes/story");
-const taskRoutes = require("./routes/task");
 
 mongoose
   .connect(
@@ -24,7 +23,7 @@ app.use(cors())
 
 app.use('/projects',projectRoutes);
 app.use('/stories',storyRoutes);
-app.use('/tasks',taskRoutes);
+
 
 app.use((err, req, res, next) => {
   console.log("global error handling running");

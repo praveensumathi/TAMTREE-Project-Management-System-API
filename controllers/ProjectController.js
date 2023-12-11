@@ -3,12 +3,19 @@ const mongoose = require("mongoose");
 
 exports.createProject = async (req, res, next) => {
   try {
+    const {
+      ProjectName,
+      description,
+      startDate,
+      endDate,
+      Duration,
+    } = req.body;
     const project = await ProjectModel.create({
-      ProjectName:req.body.ProjectName,
-      description:req.body.description,
-      startDate:req.body.startDate,
-      endDate:req.body.endDate,
-      Duration: req.body.Duration,
+      ProjectName,
+      description,
+      startDate,
+      endDate,
+      Duration,
     });
     res.json(project);
   } catch (error) {
@@ -95,10 +102,25 @@ exports.getProjectById = async (req, res) => {
 
 // PUT update a project by ID
 exports.updateProject = async (req, res) => {
+  
   try {
+    const {
+      ProjectName,
+      description,
+      startDate,
+      endDate,
+      Duration,
+    } = req.body;
+
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
-      req.body,
+    {
+      ProjectName,
+        description,
+        startDate,
+        endDate,
+        Duration,
+    },
       { new: true }
     );
     if (!project) {
