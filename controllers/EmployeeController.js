@@ -1,12 +1,12 @@
 const express = require('express');
 const { EmployeeModel, AddressModel } = require('../database/models/Employee');
 
-exports.CreateEmployee = async (req, res) => {
+exports.createEmployee = async (req, res) => {
 
     const employee = await EmployeeModel.create({
         employeeId: req.body.employeeId,
-        first_Name: req.body.first_Name,
-        last_Name: req.body.last_Name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         age: req.body.age,
         gender: req.body.gender,
@@ -16,13 +16,13 @@ exports.CreateEmployee = async (req, res) => {
     res.json(employee)
 }
 
-exports.UpdateEmployee = async (req, res) => {
+exports.updateEmployee = async (req, res) => {
     const employeeId = req.params.employeeId
 
     const updatedEmployee = {
         employeeId: req.body.employeeId,
-        first_Name: req.body.first_Name,
-        last_Name: req.body.last_Name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         age: req.body.age,
         gender: req.body.gender,
@@ -32,28 +32,42 @@ exports.UpdateEmployee = async (req, res) => {
 
     const employee = await EmployeeModel.findByIdAndUpdate(employeeId, updatedEmployee, { new: true })
     res.json(employee)
-
 }
 
-exports.DeleteEmployee = async (req, res) => {
+exports.deleteEmployee = async (req, res) => {
     const employeeId = req.params.employeeId
 
     const deleteEmployee = {
         employeeId: req.body.employeeId,
-        first_Name: req.body.first_Name,
-        last_Name: req.body.last_Name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         age: req.body.age,
         gender: req.body.gender,
         contact: req.body.contact,
         address: req.body.address
     }
-
     const employee = await EmployeeModel.findByIdAndDelete(employeeId, deleteEmployee, { new: true })
     res.json(employee)
 }
 
-exports.GetEmployee = async (req, res) => {
+exports.getEmployee = async (req, res) => {
     const employee = await EmployeeModel.find()
+    res.json(employee)
+}
+
+exports.getEmployeeBasicDetails = async (req, res) => {
+    const employee = await EmployeeModel.aggregate(
+        [{
+            $project: {
+                employeeId: 1,
+                name: {
+                    $concat: [
+                        "$firstName", " ", "$lastName"
+                    ]
+                }
+
+            }
+        }])
     res.json(employee)
 }

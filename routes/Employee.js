@@ -7,12 +7,14 @@ const use = (fn) => (req, res, next) =>
     Promise.resolve(fn(req, res)).catch(next)
 
 router.post("/createEmployee",
-    use(EmployeeController.CreateEmployee))
+    use(EmployeeController.createEmployee))
 router.put("/updateEmployee/:employeeId",
-    use(EmployeeController.UpdateEmployee))
+    use(EmployeeController.updateEmployee))
 router.delete("/deleteEmployee/:employeeId",
-    use(EmployeeController.DeleteEmployee))
+    use(EmployeeController.deleteEmployee))
 router.get("/getEmployee",
-    use(EmployeeController.GetEmployee))
+    use(EmployeeController.getEmployee))
+router.get("/employeeBasicDetails",
+    use(EmployeeController.getEmployeeBasicDetails))
 
 module.exports = router

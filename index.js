@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose')
 const port = 3000
 const app = express();
-
+app.use(express.json())
 
 mongoose.connect('mongodb+srv://pmboobesh:a5pIqiYiNwRwnGUB@cluster0.hbtw8lt.mongodb.net/ProjectManagement')
     .then(() => {
@@ -17,8 +17,6 @@ app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }))
-
-app.use(express.json())
 
 const employeeRoutes = require("./routes/Employee")
 
