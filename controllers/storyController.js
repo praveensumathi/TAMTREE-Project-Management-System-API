@@ -24,6 +24,20 @@ exports.getStories = async (req, res, next) => {
   }
 };
 
+exports.getStorybasicinfo = async (req, res, next) => {
+  try {
+    const stories = await StoryModel.find(
+      {
+        _id:1,
+        title:1,
+      }
+    );
+    res.json(stories);
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getAllStories = async (req, res) => {
   try {
     const stories = await StoryModel.aggregate([

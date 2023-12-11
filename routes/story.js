@@ -11,6 +11,8 @@ router.post('/createstory', storyController.createStory);
 
 router.get('/getstories', storyController.getStories)
 
+router.get('/getstorybasicinfo', storyController.getStorybasicinfo)
+
 router.get('/getallstories', storyController.getAllStories);
 
 router.get('/getstory/:storyId', storyController.getStoryById);
