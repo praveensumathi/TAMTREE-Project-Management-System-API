@@ -26,15 +26,20 @@ exports.getStories = async (req, res, next) => {
 
 exports.getStorybasicinfo = async (req, res, next) => {
   try {
-    const stories = await StoryModel.find(
-      {
-        _id:1,
-        title:1,
-      }
-    );
-    res.json(stories);
-  } catch (err) {
-    next(err);
+    const { projectId } = req.params; 
+
+    const stories = await StoryModel.find({ project: projectId }, 'title');
+
+    if (!stories || stories.length === 0) {
+      return res.status(404).json({ message: 'No stories found for the project' });
+    }
+
+    
+    const storiesInfo = stories.map(story => ({ storyId: story._id, title: story.title }));
+
+    res.json(storiesInfo); 
+  } catch (error) {
+    next(error);
   }
 };
 
