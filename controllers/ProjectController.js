@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 
 exports.createProject = async (req, res, next) => {
   try {
-    const { ProjectName, description, startDate, endDate, Duration } = req.body;
+    const { projectName, description, startDate, endDate, duration } = req.body;
     const project = await ProjectModel.create({
-      ProjectName,
+      projectName,
       description,
       startDate,
       endDate,
-      Duration,
+      duration,
     });
     res.json(project);
   } catch (error) {
@@ -52,7 +52,6 @@ exports.getProjectById = async (req, res) => {
           as: "storyTasks",
         },
       },
-      { $unwind: { path: "$storyTasks", preserveNullAndEmptyArrays: true } },
       {
         $lookup: {
           from: "employees",
@@ -68,9 +67,9 @@ exports.getProjectById = async (req, res) => {
       {
         $group: {
           _id: "$_id",
-          ProjectName: { $first: "$ProjectName" },
+          projectName: { $first: "$projectName" },
           description: { $first: "$description" },
-          Duration: { $first: "$Duration" },
+          duration: { $first: "$duration" },
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
           stories: {
@@ -78,16 +77,22 @@ exports.getProjectById = async (req, res) => {
               title: "$projectStories.title",
               description: "$projectStories.description",
               tasks: {
-                title: "$storyTasks.title",
-                description: "$storyTasks.description",
-                assignedTo: {
-                  _id: "$assignedUser._id",
-                  name: {
-                    $concat: [
-                      "$assignedUser.firstName",
-                      " ",
-                      "$assignedUser.lastName",
-                    ],
+                $map: {
+                  input: "$storyTasks",
+                  as: "task",
+                  in: {
+                    title: "$$task.title",
+                    description: "$$task.description",
+                    assignedTo: {
+                      _id: "$assignedUser._id",
+                      name: {
+                        $concat: [
+                          "$assignedUser.firstName",
+                          " ",
+                          "$assignedUser.lastName",
+                        ],
+                      },
+                    },
                   },
                 },
               },
@@ -117,16 +122,16 @@ exports.getProjectById = async (req, res) => {
 // PUT update a project by ID
 exports.updateProject = async (req, res) => {
   try {
-    const { ProjectName, description, startDate, endDate, Duration } = req.body;
+    const { projectName, description, startDate, endDate, duration } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
       {
-        ProjectName,
+        projectName,
         description,
         startDate,
         endDate,
-        Duration,
+        duration,
       },
       { new: true }
     );
