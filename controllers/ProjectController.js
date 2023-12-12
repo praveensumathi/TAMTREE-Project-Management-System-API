@@ -4,18 +4,18 @@ const mongoose = require("mongoose");
 exports.createProject = async (req, res, next) => {
   try {
     const {
-      ProjectName,
+      projectName,
       description,
       startDate,
       endDate,
-      Duration,
+      duration,
     } = req.body;
     const project = await ProjectModel.create({
-      ProjectName,
+      projectName,
       description,
       startDate,
       endDate,
-      Duration,
+      duration,
     });
     res.json(project);
   } catch (error) {
@@ -49,7 +49,7 @@ exports.getProjectById = async (req, res) => {
         },
       },
       {
-        $unwind: { path: "$stories", preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$stories" },
       },
       {
         $lookup: {
@@ -59,21 +59,23 @@ exports.getProjectById = async (req, res) => {
           as: "stories.tasks",
         },
       },
-      { $unwind: { path: "$stories.tasks", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$stories.tasks"} },
      
       
       {
         $group: {
           _id: "$_id",
-          ProjectName: { $first: "$ProjectName" },
+          projectName: { $first: "$projectName" },
           description: { $first: "$description" },
-          Duration: { $first: "$Duration" },
+          duration: { $first: "$duration" },
           startDate:{ $first: "$startDate" },
           endDate:{ $first: "$endDate" },
           stories: { $push: {
+            _id:"$stories._id",
             title:"$stories.title",
             description:"$stories.description",
             tasks:{
+              _id:"$stories.tasks._id",
               title:"$stories.tasks.title",
               description:"$stories.tasks.description",
 
@@ -84,11 +86,11 @@ exports.getProjectById = async (req, res) => {
       {
         $project: {
           _id: 1,
-          ProjectName: 1,
+          projectName: 1,
           description: 1,
           startDate:1,
           endDate:1,
-          Duration: 1,
+          duration: 1,
           stories: 1
         },
       },
@@ -105,21 +107,21 @@ exports.updateProject = async (req, res) => {
   
   try {
     const {
-      ProjectName,
+      projectName,
       description,
       startDate,
       endDate,
-      Duration,
+      duration,
     } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
     {
-      ProjectName,
+      projectName,
         description,
         startDate,
         endDate,
-        Duration,
+        duration,
     },
       { new: true }
     );

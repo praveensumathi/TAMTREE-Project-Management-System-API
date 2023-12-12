@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
-  ProjectName: String,
+  projectName: String,
   description: String,
   startDate: Date,
   endDate: Date,
-  Duration:String,
+  duration:String,
 });
 
 const ProjectModel = mongoose.model('Project', ProjectSchema);
