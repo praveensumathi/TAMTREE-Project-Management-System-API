@@ -3,13 +3,7 @@ const mongoose = require("mongoose");
 
 exports.createProject = async (req, res, next) => {
   try {
-    const {
-      ProjectName,
-      description,
-      startDate,
-      endDate,
-      Duration,
-    } = req.body;
+    const { ProjectName, description, startDate, endDate, Duration } = req.body;
     const project = await ProjectModel.create({
       ProjectName,
       description,
@@ -22,7 +16,6 @@ exports.createProject = async (req, res, next) => {
     next(error);
   }
 };
-
 
 exports.getAllProjects = async (req, res, next) => {
   try {
@@ -45,51 +38,72 @@ exports.getProjectById = async (req, res) => {
           from: "stories",
           localField: "_id",
           foreignField: "project",
-          as: "stories",
+          as: "projectStories",
         },
       },
       {
-        $unwind: { path: "$stories", preserveNullAndEmptyArrays: true },
+        $unwind: { path: "$projectStories", preserveNullAndEmptyArrays: true },
       },
       {
         $lookup: {
           from: "tasks",
-          localField: "stories._id",
+          localField: "projectStories._id",
           foreignField: "story",
-          as: "stories.tasks",
+          as: "storyTasks",
         },
       },
-      { $unwind: { path: "$stories.tasks", preserveNullAndEmptyArrays: true } },
-     
-      
+      { $unwind: { path: "$storyTasks", preserveNullAndEmptyArrays: true } },
+      {
+        $lookup: {
+          from: "employees",
+          localField: "storyTasks.assignedTo",
+          foreignField: "_id",
+          as: "assignedUser",
+        },
+      },
+      {
+        $unwind: { path: "$assignedUser", preserveNullAndEmptyArrays: true },
+      },
+
       {
         $group: {
           _id: "$_id",
           ProjectName: { $first: "$ProjectName" },
           description: { $first: "$description" },
           Duration: { $first: "$Duration" },
-          startDate:{ $first: "$startDate" },
-          endDate:{ $first: "$endDate" },
-          stories: { $push: {
-            title:"$stories.title",
-            description:"$stories.description",
-            tasks:{
-              title:"$stories.tasks.title",
-              description:"$stories.tasks.description",
-
-            }
-          } },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
+          stories: {
+            $push: {
+              title: "$projectStories.title",
+              description: "$projectStories.description",
+              tasks: {
+                title: "$storyTasks.title",
+                description: "$storyTasks.description",
+                assignedTo: {
+                  _id: "$assignedUser._id",
+                  name: {
+                    $concat: [
+                      "$assignedUser.firstName",
+                      " ",
+                      "$assignedUser.lastName",
+                    ],
+                  },
+                },
+              },
+            },
+          },
         },
       },
       {
         $project: {
           _id: 1,
-          ProjectName: 1,
+          projectName: 1,
           description: 1,
-          startDate:1,
-          endDate:1,
-          Duration: 1,
-          stories: 1
+          startDate: 1,
+          endDate: 1,
+          duration: 1,
+          stories: 1,
         },
       },
     ]);
@@ -102,25 +116,18 @@ exports.getProjectById = async (req, res) => {
 
 // PUT update a project by ID
 exports.updateProject = async (req, res) => {
-  
   try {
-    const {
-      ProjectName,
-      description,
-      startDate,
-      endDate,
-      Duration,
-    } = req.body;
+    const { ProjectName, description, startDate, endDate, Duration } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
-    {
-      ProjectName,
+      {
+        ProjectName,
         description,
         startDate,
         endDate,
         Duration,
-    },
+      },
       { new: true }
     );
     if (!project) {

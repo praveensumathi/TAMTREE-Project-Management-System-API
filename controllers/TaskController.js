@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const TaskModel = require("../database/models/TaskSchema");
+const TaskModel = require("../database/models/Task");
 
 exports.createTask = async (req, res, next) => {
   try {
@@ -8,18 +8,13 @@ exports.createTask = async (req, res, next) => {
       description: req.body.description,
       duration: req.body.duration,
       status: req.body.status,
+      story: req.body.story,
+      assignedTo: req.body.assignedTo,
     });
     res.json(task);
   } catch (error) {
     next(error);
   }
-  const task = await TaskModel.create({
-    title: req.body.title,
-    description: req.body.description,
-    duration: req.body.duration,
-    status: req.body.status,
-  });
-  res.json(task);
 };
 
 exports.getTasks = async (req, res, next) => {
@@ -29,7 +24,16 @@ exports.getTasks = async (req, res, next) => {
 
 exports.updateTask = async (req, res, next) => {
   const taskId = req.params.id;
-  const task = await ProjectModel.findByIdAndUpdate(taskId, req.body, {
+  const { title, description, duration, status, story, assignedTo } = req.body;
+  const updatedTask = {
+    title,
+    description,
+    duration,
+    status,
+    story,
+    assignedTo,
+  };
+  const task = await TaskModel.findByIdAndUpdate(taskId, updatedTask, {
     new: true,
   });
   res.json(task);
