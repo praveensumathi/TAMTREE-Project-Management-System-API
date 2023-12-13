@@ -78,7 +78,6 @@ exports.getProjectById = async (req, res) => {
               _id:"$stories.tasks._id",
               title:"$stories.tasks.title",
               description:"$stories.tasks.description",
-
             }
           } },
         },
