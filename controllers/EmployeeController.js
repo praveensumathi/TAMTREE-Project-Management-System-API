@@ -1,4 +1,4 @@
-const { EmployeeModel } = require('../database/models/Employee');
+const EmployeeModel = require('../database/models/Employee');
 
 exports.createEmployee = async (req, res) => {
 
