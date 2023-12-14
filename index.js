@@ -5,7 +5,7 @@ const port = 3000;
 const app = express();
 
 const employeeRoutes = require("./routes/Employee");
-const projectRoutes = require("./routes/Project");
+const projectRoutes = require("./routes/project");
 const storyRoutes = require("./routes/story");
 
 mongoose
@@ -32,8 +32,6 @@ app.use((err, req, res, next) => {
     res.json(err);
     next();
 });
-
-app.use("/employee", employeeRoutes)
 
 
 app.listen(port, (err) => {
