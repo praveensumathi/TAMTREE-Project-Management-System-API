@@ -3,7 +3,7 @@ const EmployeeModel = require('../database/models/Employee');
 exports.createEmployee = async (req, res) => {
 
     const { employeeId, firstName, lastName, email, age, gender, contact, address } = req.body
-
+    
     const employee = await EmployeeModel.create({
         employeeId, firstName, lastName, email, age, gender, contact, address
     })
@@ -21,7 +21,6 @@ exports.updateEmployee = async (req, res) => {
 
 exports.deleteEmployee = async (req, res) => {
     const id = req.params.id
-    console.log(id);
     const result = await EmployeeModel.findByIdAndDelete(id)
     res.json(result)
 }

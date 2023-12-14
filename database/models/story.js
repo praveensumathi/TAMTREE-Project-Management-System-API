@@ -4,7 +4,7 @@ const ProjectModel = require('./project')
 
 
 const StorySchema = new mongoose.Schema({
-   title: String,
+  title: String,
   description: String,
   project:{ type: mongoose.Schema.Types.ObjectId, ref: ProjectModel}  
 });

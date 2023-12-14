@@ -33,7 +33,6 @@ exports.getAllProjects = async (req, res, next) => {
   }
 };
 
-// GET a specific project by ID aggregate
 exports.getProjectById = async (req, res) => {
   try {
     const result = await ProjectModel.aggregate([
@@ -48,54 +47,66 @@ exports.getProjectById = async (req, res) => {
           as: "stories",
         },
       },
-      {
-        $unwind: { path: "$stories" },
-      },
+      { $unwind: "$stories" },
       {
         $lookup: {
           from: "tasks",
           localField: "stories._id",
           foreignField: "story",
-          as: "stories.tasks",
+          as: "tasks",
+        }
+      },
+      {
+        $lookup: {
+          from: "employees",
+          localField: "tasks.assignedTo",
+          foreignField: "_id",
+          as: "employees",
         },
       },
-      { $unwind: { path: "$stories.tasks"} },
-     
-      
+      { $unwind: "$employees" },
       {
         $group: {
           _id: "$_id",
           projectName: { $first: "$projectName" },
           description: { $first: "$description" },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
           duration: { $first: "$duration" },
-          startDate:{ $first: "$startDate" },
-          endDate:{ $first: "$endDate" },
-          stories: { $push: {
-            _id:"$stories._id",
-            title:"$stories.title",
-            description:"$stories.description",
-            tasks:{
-              _id:"$stories.tasks._id",
-              title:"$stories.tasks.title",
-              description:"$stories.tasks.description",
-
+          stories: {
+            $push: {
+              _id: "$stories._id",
+              title: "$stories.title",
+              description: "$stories.description",
+              tasks: {
+                $map: {
+                  input: "$tasks",
+                  as: "task",
+                  in: {
+                    _id: "$$task._id",
+                    title: "$$task.title",
+                    description: "$$task.description",
+                    duration: "$$task.duration",
+                    assignedTo: "$employees"
+                  }
+                }
+              }
             }
-          } },
-        },
+          }
+        }
       },
       {
         $project: {
-          _id: 1,
           projectName: 1,
           description: 1,
-          startDate:1,
-          endDate:1,
+          startDate: 1,
+          endDate: 1,
           duration: 1,
           stories: 1
-        },
-      },
-    ]);
+        }
+      }
 
+    ]);
     res.json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -104,7 +115,7 @@ exports.getProjectById = async (req, res) => {
 
 // PUT update a project by ID
 exports.updateProject = async (req, res) => {
-  
+
   try {
     const {
       projectName,
@@ -116,13 +127,13 @@ exports.updateProject = async (req, res) => {
 
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
-    {
-      projectName,
+      {
+        projectName,
         description,
         startDate,
         endDate,
         duration,
-    },
+      },
       { new: true }
     );
     if (!project) {

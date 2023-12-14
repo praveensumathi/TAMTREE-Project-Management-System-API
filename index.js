@@ -26,14 +26,11 @@ app.use('/projects', projectRoutes);
 app.use('/stories', storyRoutes);
 app.use('/employee', employeeRoutes);
 
-
 app.use((err, req, res, next) => {
     console.log("global error handling running");
     res.json(err);
     next();
 });
-
-app.use("/employee", employeeRoutes)
 
 
 app.listen(port, (err) => {

@@ -2,9 +2,8 @@ const express = require("express")
 const router = express.Router()
 const EmployeeController = require("../controllers/EmployeeController")
 
-
 const use = (fn) => (req, res, next) =>
-    Promise.resolve(fn(req, res)).catch(next)
+    Promise.resolve(fn(req, res, next)).catch(next)
 
 router.post("/createEmployee",
     use(EmployeeController.createEmployee))
