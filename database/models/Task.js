@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
   title: String,
   description: String,
   duration: String,
-  status: String,
+  status: Number,
   story: {
     type: mongoose.Types.ObjectId,
     ref: StoryModel,

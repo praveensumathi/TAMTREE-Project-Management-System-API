@@ -74,6 +74,7 @@ exports.getProjectById = async (req, res) => {
           endDate: { $first: "$endDate" },
           stories: {
             $push: {
+              _id: "$projectStories._id",
               title: "$projectStories.title",
               description: "$projectStories.description",
               tasks: {
@@ -81,8 +82,11 @@ exports.getProjectById = async (req, res) => {
                   input: "$storyTasks",
                   as: "task",
                   in: {
+                    _id: "$$task._id",
                     title: "$$task.title",
                     description: "$$task.description",
+                    duration: "$$task.duration",
+                    status: "$$task.status",
                     assignedTo: {
                       _id: "$assignedUser._id",
                       name: {
@@ -113,7 +117,7 @@ exports.getProjectById = async (req, res) => {
       },
     ]);
 
-    res.json(result);
+    res.json(result && result.length > 0 ? result[0] : {});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

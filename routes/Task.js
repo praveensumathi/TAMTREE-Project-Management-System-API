@@ -9,4 +9,5 @@ router.post("/createTask", use(taskController.createTask));
 router.get("/getTasks", use(taskController.getTasks));
 router.delete("/deleteTask/:id", use(taskController.deleteTask));
 router.put("/updateTask/:id", use(taskController.updateTask));
+router.put("/updateTaskStatus/:id", use(taskController.updateTaskStatus));
 module.exports = router;

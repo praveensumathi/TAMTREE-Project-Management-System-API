@@ -45,3 +45,15 @@ exports.deleteTask = async (req, res, next) => {
   });
   res.json(task);
 };
+
+exports.updateTaskStatus = async (req, res, next) => {
+  const taskId = req.params.id;
+  const { status } = req.body;
+  const updatedTask = {
+    status,
+  };
+  const task = await TaskModel.findByIdAndUpdate(taskId, updatedTask, {
+    new: true,
+  });
+  res.json(task);
+};
