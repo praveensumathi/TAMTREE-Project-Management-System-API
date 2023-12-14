@@ -3,13 +3,7 @@ const mongoose = require("mongoose");
 
 exports.createProject = async (req, res, next) => {
   try {
-    const {
-      projectName,
-      description,
-      startDate,
-      endDate,
-      duration,
-    } = req.body;
+    const { projectName, description, startDate, endDate, duration } = req.body;
     const project = await ProjectModel.create({
       projectName,
       description,
@@ -22,7 +16,6 @@ exports.createProject = async (req, res, next) => {
     next(error);
   }
 };
-
 
 exports.getAllProjects = async (req, res, next) => {
   try {
@@ -45,42 +38,70 @@ exports.getProjectById = async (req, res) => {
           from: "stories",
           localField: "_id",
           foreignField: "project",
-          as: "stories",
+          as: "projectStories",
         },
       },
       {
-        $unwind: { path: "$stories" },
+        $unwind: { path: "$projectStories", preserveNullAndEmptyArrays: true },
       },
       {
         $lookup: {
           from: "tasks",
-          localField: "stories._id",
+          localField: "projectStories._id",
           foreignField: "story",
-          as: "stories.tasks",
+          as: "storyTasks",
         },
       },
-      { $unwind: { path: "$stories.tasks"} },
-     
-      
+      {
+        $lookup: {
+          from: "employees",
+          localField: "storyTasks.assignedTo",
+          foreignField: "_id",
+          as: "assignedUser",
+        },
+      },
+      {
+        $unwind: { path: "$assignedUser", preserveNullAndEmptyArrays: true },
+      },
+
       {
         $group: {
           _id: "$_id",
           projectName: { $first: "$projectName" },
           description: { $first: "$description" },
           duration: { $first: "$duration" },
-          startDate:{ $first: "$startDate" },
-          endDate:{ $first: "$endDate" },
-          stories: { $push: {
-            _id:"$stories._id",
-            title:"$stories.title",
-            description:"$stories.description",
-            tasks:{
-              _id:"$stories.tasks._id",
-              title:"$stories.tasks.title",
-              description:"$stories.tasks.description",
-
-            }
-          } },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
+          stories: {
+            $push: {
+              _id: "$projectStories._id",
+              title: "$projectStories.title",
+              description: "$projectStories.description",
+              tasks: {
+                $map: {
+                  input: "$storyTasks",
+                  as: "task",
+                  in: {
+                    _id: "$$task._id",
+                    title: "$$task.title",
+                    description: "$$task.description",
+                    duration: "$$task.duration",
+                    status: "$$task.status",
+                    assignedTo: {
+                      _id: "$assignedUser._id",
+                      name: {
+                        $concat: [
+                          "$assignedUser.firstName",
+                          " ",
+                          "$assignedUser.lastName",
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       },
       {
@@ -88,15 +109,15 @@ exports.getProjectById = async (req, res) => {
           _id: 1,
           projectName: 1,
           description: 1,
-          startDate:1,
-          endDate:1,
+          startDate: 1,
+          endDate: 1,
           duration: 1,
-          stories: 1
+          stories: 1,
         },
       },
     ]);
 
-    res.json(result);
+    res.json(result && result.length > 0 ? result[0] : {});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -104,25 +125,18 @@ exports.getProjectById = async (req, res) => {
 
 // PUT update a project by ID
 exports.updateProject = async (req, res) => {
-  
   try {
-    const {
-      projectName,
-      description,
-      startDate,
-      endDate,
-      duration,
-    } = req.body;
+    const { projectName, description, startDate, endDate, duration } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
       req.params.projectId,
-    {
-      projectName,
+      {
+        projectName,
         description,
         startDate,
         endDate,
         duration,
-    },
+      },
       { new: true }
     );
     if (!project) {
