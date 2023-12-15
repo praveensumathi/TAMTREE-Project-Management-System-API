@@ -24,19 +24,19 @@ exports.getStories = async (req, res, next) => {
   }
 };
 
-exports.getStorybasicinfo = async (req, res, next) => {
+exports.getStoryByProjectId = async (req, res, next) => {
   try {
-    const projectId  = req.params.projectId;
+    const projectId = req.params.projectId;
 
     const storiesInfo = await StoryModel.aggregate([
       {
         $match: { project: new mongoose.Types.ObjectId(projectId) },
       },
       {
-        $project:{
-          _id:1,
-          title:1,
-          description:1
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1
         }
       }
     ]);
