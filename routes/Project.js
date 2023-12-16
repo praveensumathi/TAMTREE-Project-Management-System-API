@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const projectController = require('../controllers/ProjectController');
+const projectController = require('../controllers/projectController');
 
 const use = (fn) =>(req,res,next) =>
 Promise.resolve(fn(req,res,next)).catch(next);

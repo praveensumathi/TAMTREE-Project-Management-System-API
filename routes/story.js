@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const storyController = require('../controllers/storyController');
 
-const use = (fn) =>(req,res,next) =>
-Promise.resolve(fn(req,res,next)).catch(next);
+const use = (fn) => (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch(next);
 
 
 router.post('/createstory', storyController.createStory);
@@ -11,7 +11,7 @@ router.post('/createstory', storyController.createStory);
 
 router.get('/getstories', storyController.getStories)
 
-router.get('/getstorybasicinfo/:projectId', storyController.getStorybasicinfo)
+router.get('/getstorybasicinfo/:projectId', storyController.getStoryByProjectId)
 
 router.get('/getallstories', storyController.getAllStories);
 
