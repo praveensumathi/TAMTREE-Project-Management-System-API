@@ -1,5 +1,5 @@
 const StoryModel = require("../database/models/story");
-
+const mongoose = require("mongoose");
 exports.createStory = async (req, res, next) => {
   try {
     const { title, description, project } = req.body;
