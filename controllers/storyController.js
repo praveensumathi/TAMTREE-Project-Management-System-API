@@ -1,5 +1,5 @@
+const { default: mongoose } = require("mongoose");
 const StoryModel = require("../database/models/story");
-
 
 exports.createStory = async (req, res, next) => {
   try {
@@ -24,20 +24,23 @@ exports.getStories = async (req, res, next) => {
   }
 };
 
-exports.getStorybasicinfo = async (req, res, next) => {
+exports.getStoryByProjectId = async (req, res, next) => {
   try {
-    const { projectId } = req.params; 
+    const projectId = req.params.projectId;
 
-    const stories = await StoryModel.find({ project: projectId }, 'title');
-
-    if (!stories || stories.length === 0) {
-      return res.status(404).json({ message: 'No stories found for the project' });
-    }
-
-    
-    const storiesInfo = stories.map(story => ({ storyId: story._id, title: story.title }));
-
-    res.json(storiesInfo); 
+    const storiesInfo = await StoryModel.aggregate([
+      {
+        $match: { project: new mongoose.Types.ObjectId(projectId) },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1
+        }
+      }
+    ]);
+    res.json(storiesInfo);
   } catch (error) {
     next(error);
   }

@@ -9,7 +9,7 @@ exports.createProject = async (req, res, next) => {
       description,
       startDate,
       endDate,
-      duration,
+      // duration,
     });
     res.json(project);
   } catch (error) {
@@ -24,6 +24,7 @@ exports.getAllProjects = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+  
 };
 
 // GET a specific project by ID aggregate
@@ -69,6 +70,8 @@ exports.getProjectById = async (req, res) => {
           _id: "$_id",
           projectName: { $first: "$projectName" },
           description: { $first: "$description" },
+          startDate: { $first: "$startDate" },
+          endDate: { $first: "$endDate" },
           duration: { $first: "$duration" },
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
@@ -106,7 +109,6 @@ exports.getProjectById = async (req, res) => {
       },
       {
         $project: {
-          _id: 1,
           projectName: 1,
           description: 1,
           startDate: 1,
