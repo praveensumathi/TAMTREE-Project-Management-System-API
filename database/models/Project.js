@@ -5,7 +5,7 @@ const ProjectSchema = new mongoose.Schema({
   description: String,
   startDate: Date,
   endDate: Date,
-  duration:String,
+  // duration:String,
 });
 
 const ProjectModel = mongoose.model('Project', ProjectSchema);

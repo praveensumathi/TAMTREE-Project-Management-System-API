@@ -8,14 +8,14 @@ exports.createProject = async (req, res, next) => {
       description,
       startDate,
       endDate,
-      duration,
+      // duration,
     } = req.body;
     const project = await ProjectModel.create({
       projectName,
       description,
       startDate,
       endDate,
-      duration,
+      // duration,
     });
     res.json(project);
   } catch (error) {
@@ -125,7 +125,7 @@ exports.updateProject = async (req, res) => {
       description,
       startDate,
       endDate,
-      duration,
+      // duration,
     } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
@@ -135,7 +135,7 @@ exports.updateProject = async (req, res) => {
         description,
         startDate,
         endDate,
-        duration,
+        // duration,
     },
       { new: true }
     );
