@@ -5,9 +5,9 @@ const ProjectSchema = new mongoose.Schema({
   description: String,
   startDate: Date,
   endDate: Date,
-  duration:String,
 });
+
 
 const ProjectModel = mongoose.model('Project', ProjectSchema);
 
-module.exports = ProjectModel
+module.exports = ProjectModel;

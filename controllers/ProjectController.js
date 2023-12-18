@@ -8,14 +8,12 @@ exports.createProject = async (req, res, next) => {
       description,
       startDate,
       endDate,
-      duration,
     } = req.body;
     const project = await ProjectModel.create({
       projectName,
       description,
       startDate,
       endDate,
-      duration,
     });
     res.json(project);
   } catch (error) {
@@ -74,7 +72,6 @@ exports.getProjectById = async (req, res) => {
           description: { $first: "$description" },
           startDate: { $first: "$startDate" },
           endDate: { $first: "$endDate" },
-          duration: { $first: "$duration" },
           stories: {
             $push: {
               _id: "$stories._id",
@@ -88,7 +85,6 @@ exports.getProjectById = async (req, res) => {
                     _id: "$$task._id",
                     title: "$$task.title",
                     description: "$$task.description",
-                    duration: "$$task.duration",
                     assignedTo: "$employees"
                   }
                 }
@@ -103,7 +99,6 @@ exports.getProjectById = async (req, res) => {
           description: 1,
           startDate: 1,
           endDate: 1,
-          duration: 1,
           stories: 1
         }
       }
@@ -124,8 +119,7 @@ exports.updateProject = async (req, res) => {
       projectName,
       description,
       startDate,
-      endDate,
-      duration,
+      endDate
     } = req.body;
 
     const project = await ProjectModel.findByIdAndUpdate(
@@ -134,8 +128,7 @@ exports.updateProject = async (req, res) => {
       projectName,
         description,
         startDate,
-        endDate,
-        duration,
+        endDate
     },
       { new: true }
     );
