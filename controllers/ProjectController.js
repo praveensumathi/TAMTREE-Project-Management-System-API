@@ -1,4 +1,4 @@
-const ProjectModel = require("../database/models/project");
+const ProjectModel = require("../database/models/Project");
 const mongoose = require("mongoose");
 
 exports.createProject = async (req, res, next) => {
