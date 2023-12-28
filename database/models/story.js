@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ProjectModel = require('./project')
+const ProjectModel = require('./Project')
 
 
 
